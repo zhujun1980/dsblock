@@ -1,27 +1,27 @@
 Data Structure in File Block
 ============================
 
-* 基于共享内存
-* 自动加载变更
-* 内存紧凑
-* 查找高效
-* 支持 UTF-8
-* Python 友好
-* C API，便于移植
+* Shared memory
+* Auto reload on files changed
+* Memory efficient
+* Fast search
+* UTF-8 supported
+* Python friendly
+* C API
 
 ## bloomfilter
 
-* 集合查找
+python unittest cases: [bloomfilter_test.py](python/dsblock/bloomfilter_test.py)
 
-python测试用例: [bloomfilter_test.py](python/dsblock/bloomfilter_test.py)
+## Tst (Ternary search tree)
 
-## Tst（Triple Search Tries）
+[Ternary search tree](https://en.wikipedia.org/wiki/Ternary_search_tree)
 
-* 字典查找
-* 前缀查找
-* 近邻查找
+* Dictionary
+* Prefix Search
+* Near Neighbors Search
 
-python测试用例: [tst_test.py](python/dsblock/tst_test.py)
+python unittest cases [tst_test.py](python/dsblock/tst_test.py)
 
 ## Build
 
