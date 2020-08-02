@@ -21,7 +21,7 @@ python unittest cases: [bloomfilter_test.py](python/dsblock/bloomfilter_test.py)
 * Prefix Search
 * Near Neighbors Search
 
-#### Prefix Search
+### Prefix Search
 
 ```python
 # txt_file: one word one line
@@ -43,7 +43,7 @@ __Output:__
 }
 ```
 
-#### Near Neighbors Search
+### Near Neighbors Search
 
 ```python
 ret = tst_near_neighbors_search(bin_file, "张三丰", 1) # search the words which distance less than 1 to key
