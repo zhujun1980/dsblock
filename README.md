@@ -54,10 +54,10 @@ __Output:__
 
 ```json
 {
-    'total_neighbors': 3,
-    'return_neighbors': 3,
-    'read_size': 30,
-    'neighbors': ["张一丰", "张二丰", "赵三丰"]
+    "total_neighbors": 3,
+    "return_neighbors": 3,
+    "read_size": 30,
+    "neighbors": ["张一丰", "张二丰", "赵三丰"]
 }
 ```
 
