@@ -9,7 +9,7 @@ Data Structure in File Block
 * Python friendly
 * C API
 
-## bloomfilter
+## Bloomfilter
 
 python unittest cases: [bloomfilter_test.py](python/dsblock/bloomfilter_test.py)
 
