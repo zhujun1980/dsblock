@@ -36,10 +36,10 @@ __Output:__
 
 ```json
 {
-    'total_words': 7,
-    'return_words': 7,
-    'read_size': 55,
-    'words': ['李会昌', '李俭', '李光辉', '李桐', '李浩', '李践', '李韦']
+    "total_words": 7,
+    "return_words": 7,
+    "read_size": 55,
+    "words": ["李会昌", "李俭", "李光辉", "李桐", "李浩", "李践", "李韦"]
 }
 ```
 
@@ -57,7 +57,7 @@ __Output:__
     'total_neighbors': 3,
     'return_neighbors': 3,
     'read_size': 30,
-    'neighbors': ['张一丰', '张二丰', '赵三丰']
+    'neighbors': ["张一丰", "张二丰", "赵三丰"]
 }
 ```
 
