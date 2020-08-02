@@ -55,6 +55,7 @@ class TestTst(unittest.TestCase):
     def test_prefix_search(self):
         tst_create_bin_from_txt(self.txt_file, self.bin_file)
         ret = tst_prefix_search(self.bin_file, "李")
+        print(ret)
         self.assertEqual(ret["total_words"], 7)
         self.assertEqual(ret["return_words"], 7)
         self.assertSetEqual(set(ret["words"]), {"李浩", "李桐", "李践", "李会昌", "李俭", "李光辉", "李韦"})
@@ -67,6 +68,7 @@ class TestTst(unittest.TestCase):
         self.assertSetEqual(set(ret["neighbors"]), {"江泽民", "江泽慧", "孙泽民"})
 
         ret = tst_near_neighbors_search(self.bin_file, "张三丰", 1)
+        print(ret)
         self.assertEqual(ret["total_neighbors"], 3)
         self.assertEqual(ret["return_neighbors"], 3)
         self.assertSetEqual(set(ret["neighbors"]), {"张一丰", "张二丰", "赵三丰"})
