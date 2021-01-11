@@ -45,6 +45,7 @@ public:
     int GetMappingObject(const std::string& bin_file, const _Tp** obj) {
         uint32_t hv = Hash(bin_file);
         FileCacheIter iter = caches_.find(hv);
+        std::string header = "Init";
 
         if(iter != caches_.end()) {
             //Found, check file's status
@@ -61,6 +62,7 @@ public:
             //Changed, get file path
             delete iter->second;
             caches_.erase(hv);
+            header = "Reload";
         }
 
         FileMapping<_Tp>* mapping = FileMappingCreate<_Tp>(bin_file);
@@ -70,6 +72,8 @@ public:
         }
         caches_[hv] = mapping;
         *obj = mapping->object;
+        DoLog(Logger::INFO, "%s: `%s` has mapped successfully (addr=%p, mtime=%ld, size=%d bytes).",
+            header.c_str(), mapping->filepath.c_str(), mapping->attachAddr, mapping->mtime, mapping->filesize);
         return 0;
     }
 
