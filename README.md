@@ -74,7 +74,7 @@ make -j
 ```
 
 ```shell
-# test
+# run test
 python3 ../python/setup.py test
 ```
 
