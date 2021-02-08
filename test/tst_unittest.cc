@@ -28,8 +28,7 @@ TEST(Tst, Insert) {
 }
 
 TEST(Tst, Build) {
-    const char *txt = "/Users/zhujun/source/sina/git/recsys/service/build/service/dsblock/30wdict.txt";
-    // const char *txt = "/Users/zhujun/Workshop/code/service/dsblock/30wdict.txt";
+    const char *txt = "30wdict.txt";
 
     TriSearchTries *tries = TriSearchTries::Build(txt);
     EXPECT_NE(tries, nullptr);
@@ -38,7 +37,7 @@ TEST(Tst, Build) {
     std::vector<std::string> words;
     tries->PrefixSearch("中国", words, with_prefix);
     std::cout << words.size() << std::endl;
-    for(auto word : words) {
+    for (auto word : words) {
         std::cout << word << std::endl;
     }
 }

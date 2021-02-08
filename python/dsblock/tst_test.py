@@ -31,10 +31,6 @@ class TestTst(unittest.TestCase):
         os.close(fd)
 
     def test_create_tst(self):
-        # tst_create_bin_from_txt("/recsys/source/service/dsblock/30wdict.txt", "./sorted.txt")
-        # tst_create_bin_from_txt("/mnt/code/service/dsblock/30wdict.txt", "./sorted.txt")
-        # tst_create_bin_from_txt("/Users/zhujun/Workshop/code/service/dsblock/30wdict.txt", "./dict.tst")
-        # tst_create_bin_from_txt("/Users/zhujun/source/sina/git/recsys/service/build/service/dsblock/30wdict.txt", "./dict.tst")
         self.assertTrue(tst_create_bin_from_txt(self.txt_file, self.bin_file) > 0)
 
     def test_is_present(self):

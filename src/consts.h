@@ -4,7 +4,7 @@
  */
 
 #ifndef CONSTS_H
-#define	CONSTS_H
+#define CONSTS_H
 
 enum CACHE_DATA_FORMAT_TYPE {
     INVALID_TYPE = 0,
@@ -19,8 +19,8 @@ enum DataLoc {
     IN_HEAP,
 };
 
-#define SHM_IPC_KEYS    "/tmp/fcache"
+#define SHM_IPC_KEYS "/tmp/fcache"
 
-#define MAX_HASH_COUNT  256
+#define MAX_HASH_COUNT 256
 
-#endif	/* CONSTS_H */
+#endif /* CONSTS_H */

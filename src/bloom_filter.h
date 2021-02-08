@@ -4,7 +4,7 @@
  */
 
 #ifndef BLOOM_FILTER_H
-#define	BLOOM_FILTER_H
+#define BLOOM_FILTER_H
 
 #include <stdint.h>
 #include <iostream>
@@ -75,6 +75,6 @@ private:
     BitSetPointer bitset;
 };
 
-}
+}  // namespace dsblock
 
-#endif	/* BLOOM_FILTER_H */
+#endif /* BLOOM_FILTER_H */

@@ -2,7 +2,7 @@
  * File:   rand_utils.cc
  * Author: zhujun
  */
-#ifdef	__cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -10,7 +10,7 @@ extern "C" {
 #include <fcntl.h>
 #include <unistd.h>
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 }
 #endif
 
@@ -42,7 +42,7 @@ URandomFd g_urandom_fd;
 uint64_t RandUint64() {
     uint64_t rand;
     bool success = ReadFromFD(g_urandom_fd.fd(), reinterpret_cast<char*>(&rand), sizeof(rand));
-    if(!success) {
+    if (!success) {
         return 0L;
     }
     return rand;
@@ -51,10 +51,10 @@ uint64_t RandUint64() {
 uint32_t RandUint32() {
     uint32_t rand;
     bool success = ReadFromFD(g_urandom_fd.fd(), reinterpret_cast<char*>(&rand), sizeof(rand));
-    if(!success) {
+    if (!success) {
         return 0L;
     }
     return rand;
 }
 
-}
+}  // namespace dsblock

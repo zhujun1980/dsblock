@@ -2,7 +2,7 @@
  * File:   shmm_posix.cc
  * Author: zhujun
  */
-#ifdef	__cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -17,7 +17,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 }
 #endif
 
@@ -25,7 +25,7 @@ extern "C" {
 
 namespace dsblock {
 
-void* CreateMmap(const char *file, size_t segsize) {
+void *CreateMmap(const char *file, size_t segsize) {
     mode_t mode = umask(0);
     int fd = open(file, O_CREAT | O_TRUNC | O_RDWR, 0666);
     if (fd == -1) {
@@ -47,33 +47,33 @@ void* CreateMmap(const char *file, size_t segsize) {
     return addr;
 }
 
-void* MMap(const char *file, size_t segsize, int fg) {
+void *MMap(const char *file, size_t segsize, int fg) {
     int flags = fg;
     int prot = 0x0;
     switch (fg) {
-        case O_RDONLY:
-            prot = PROT_READ;
-            break;
-        case O_WRONLY:
-            prot = PROT_WRITE;
-            break;
-        case O_RDWR:
-            prot = PROT_READ | PROT_WRITE;
-            break;
-        default:
-            return NULL;
+    case O_RDONLY:
+        prot = PROT_READ;
+        break;
+    case O_WRONLY:
+        prot = PROT_WRITE;
+        break;
+    case O_RDWR:
+        prot = PROT_READ | PROT_WRITE;
+        break;
+    default:
+        return NULL;
     }
 
     int fd = open(file, flags);
-    if (fd == -1) { // 文件不存在
+    if (fd == -1) {  // 文件不存在
         return NULL;
     }
 
     struct stat buffer;
-    if (fstat(fd, &buffer) == -1) {// 无法获得文件信息
+    if (fstat(fd, &buffer) == -1) {  // 无法获得文件信息
         return NULL;
     }
-    if (buffer.st_size == 0) {// 文件0字节
+    if (buffer.st_size == 0) {  // 文件0字节
         return NULL;
     }
 
@@ -83,7 +83,7 @@ void* MMap(const char *file, size_t segsize, int fg) {
 }
 
 bool MUnMap(void *addr, size_t segsize) {
-    return munmap(static_cast<char*>(addr), segsize) == 0 ? true : false;
+    return munmap(static_cast<char *>(addr), segsize) == 0 ? true : false;
 }
 
-}
+}  // namespace dsblock

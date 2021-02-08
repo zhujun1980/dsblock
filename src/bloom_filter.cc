@@ -36,7 +36,7 @@ void BloomFilter::Add(const std::string& kb) {
 
 bool BloomFilter::IsPresent(const std::string& kb) const {
     for (size_t i = 0; i < hash_seeds.size(); i++) {
-        if(!bitset->Get(Hash(kb, hash_seeds[i])))
+        if (!bitset->Get(Hash(kb, hash_seeds[i])))
             return false;
     }
     return true;
@@ -53,7 +53,7 @@ bool BloomFilter::IsPresent(const std::string& kb) const {
  */
 bool BloomFilter::Save(std::string& filepath) {
     FILE* idx = OpenFile(filepath.c_str(), "w+");
-    if(idx == NULL) {
+    if (idx == NULL) {
         DoLog(Logger::ERROR, "Open BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         return false;
     }
@@ -64,7 +64,7 @@ bool BloomFilter::Save(std::string& filepath) {
 
     sec = BLOOM_FILTER;
     ret = WriteFD(fd, reinterpret_cast<const char*>(&sec), sizeof(sec));
-    if(ret < 0) {
+    if (ret < 0) {
         DoLog(Logger::ERROR, "write BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         CloseFile(idx);
         return false;
@@ -72,7 +72,7 @@ bool BloomFilter::Save(std::string& filepath) {
 
     sec = data_version;
     ret = WriteFD(fd, reinterpret_cast<const char*>(&sec), sizeof(sec));
-    if(ret < 0) {
+    if (ret < 0) {
         DoLog(Logger::ERROR, "write BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         CloseFile(idx);
         return false;
@@ -80,7 +80,7 @@ bool BloomFilter::Save(std::string& filepath) {
 
     sec = hash_seeds.size();
     ret = WriteFD(fd, reinterpret_cast<const char*>(&sec), sizeof(sec));
-    if(ret < 0) {
+    if (ret < 0) {
         DoLog(Logger::ERROR, "write BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         CloseFile(idx);
         return false;
@@ -89,7 +89,7 @@ bool BloomFilter::Save(std::string& filepath) {
     for (size_t i = 0; i < hash_seeds.size(); i++) {
         uint64_t seed = hash_seeds[i];
         ret = WriteFD(fd, reinterpret_cast<const char*>(&seed), sizeof(seed));
-        if(ret < 0) {
+        if (ret < 0) {
             DoLog(Logger::ERROR, "write BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
             CloseFile(idx);
             return false;
@@ -97,7 +97,7 @@ bool BloomFilter::Save(std::string& filepath) {
     }
 
     ret = bitset->Save(fd);
-    if(!ret) {
+    if (!ret) {
         DoLog(Logger::ERROR, "save bitset failed (%s:%d)", __FILE__, __LINE__);
         CloseFile(idx);
         return false;
@@ -114,12 +114,12 @@ BloomFilter* BloomFilter::Load(void* addr, size_t size) {
     uint16_t data_ver;
     int hash_cnt;
 
-    if(size == 0) {
+    if (size == 0) {
         DoLog(Logger::WARNING, "size equal zero (%s:%d)", __FILE__, __LINE__);
         return NULL;
     }
     sec = reinterpret_cast<uint16_t*>(addr);
-    if(*sec++ != BLOOM_FILTER) {
+    if (*sec++ != BLOOM_FILTER) {
         DoLog(Logger::WARNING, "file invalid (%s:%d)", __FILE__, __LINE__);
         return NULL;
     }
@@ -130,16 +130,16 @@ BloomFilter* BloomFilter::Load(void* addr, size_t size) {
         hash_seeds.push_back(*seed);
     }
     BitSet* bitset = BitSet::Load(seed, size);
-    if(bitset == NULL) {
+    if (bitset == NULL) {
         DoLog(Logger::WARNING, "create bitset failed (%s:%d)", __FILE__, __LINE__);
         return NULL;
     }
-    return new(std::nothrow) BloomFilter(data_ver, hash_seeds, bitset);
+    return new (std::nothrow) BloomFilter(data_ver, hash_seeds, bitset);
 }
 
 BloomFilter* BloomFilter::Load(const std::string& filepath) {
     FILE* idx = OpenFile(filepath.c_str(), "r");
-    if(idx == NULL) {
+    if (idx == NULL) {
         DoLog(Logger::WARNING, "Open BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         return NULL;
     }
@@ -153,12 +153,12 @@ BloomFilter* BloomFilter::Load(const std::string& filepath) {
     fd = fileno(idx);
     //read data type
     ret = ReadFromFD(fd, reinterpret_cast<char*>(&sec), sizeof(sec));
-    if(!ret) {
+    if (!ret) {
         DoLog(Logger::WARNING, "read BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         CloseFile(idx);
         return NULL;
     }
-    if(sec != BLOOM_FILTER) {
+    if (sec != BLOOM_FILTER) {
         DoLog(Logger::WARNING, "invalid file failed %d (%s:%d)", sec, __FILE__, __LINE__);
         CloseFile(idx);
         return NULL;
@@ -166,7 +166,7 @@ BloomFilter* BloomFilter::Load(const std::string& filepath) {
 
     //read data version
     ret = ReadFromFD(fd, reinterpret_cast<char*>(&sec), sizeof(sec));
-    if(!ret) {
+    if (!ret) {
         DoLog(Logger::WARNING, "read BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         CloseFile(idx);
         return NULL;
@@ -174,7 +174,7 @@ BloomFilter* BloomFilter::Load(const std::string& filepath) {
     data_ver = sec;
 
     ret = ReadFromFD(fd, reinterpret_cast<char*>(&sec), sizeof(sec));
-    if(!ret) {
+    if (!ret) {
         DoLog(Logger::WARNING, "read BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
         CloseFile(idx);
         return NULL;
@@ -183,7 +183,7 @@ BloomFilter* BloomFilter::Load(const std::string& filepath) {
     for (int i = 0; i < sec; i++) {
         uint64_t seed;
         ret = ReadFromFD(fd, reinterpret_cast<char*>(&seed), sizeof(seed));
-        if(!ret) {
+        if (!ret) {
             DoLog(Logger::WARNING, "read BloomFilter file failed %d (%s:%d)", errno, __FILE__, __LINE__);
             CloseFile(idx);
             return NULL;
@@ -192,11 +192,11 @@ BloomFilter* BloomFilter::Load(const std::string& filepath) {
     }
     BitSet* bitset = BitSet::Load(fd);
     CloseFile(idx);
-    if(bitset == NULL) {
+    if (bitset == NULL) {
         DoLog(Logger::WARNING, "create bitset failed (%s:%d)", __FILE__, __LINE__);
         return NULL;
     }
-    return new(std::nothrow) BloomFilter(data_ver, hash_seeds, bitset);
+    return new (std::nothrow) BloomFilter(data_ver, hash_seeds, bitset);
 }
 
-}
+}  // namespace dsblock

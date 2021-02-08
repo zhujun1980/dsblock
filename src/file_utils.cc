@@ -3,7 +3,7 @@
 //  BloomFilter
 //
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -15,7 +15,7 @@ extern "C" {
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 }
 #endif
 
@@ -47,10 +47,10 @@ bool ReadFromFD(int fd, char* buffer, size_t bytes) {
 int WriteFile(const char* filepath, const char* data, int size) {
     int fd;
     NO_INTR(fd = creat(filepath, 0640));
-    if(fd < 0)
+    if (fd < 0)
         return -1;
     int bytes_written = WriteFD(fd, data, size);
-    if(close(fd) < 0)
+    if (close(fd) < 0)
         return -1;
     return bytes_written;
 }
@@ -71,17 +71,19 @@ bool CloseFile(FILE* file) {
     return fclose(file) == 0;
 }
 
-bool GetFileSize(const char *file, size_t &size) {
+bool GetFileSize(const char* file, size_t& size) {
     struct stat st;
     int ret;
 
     NO_INTR(ret = stat(file, &st));
     if (ret < 0) {
         return false;
-    } else {
+    }
+    else {
         if (st.st_blocks == 0) {
             size = 0;
-        } else {
+        }
+        else {
             size = st.st_size;
         }
     }
@@ -98,4 +100,4 @@ bool GetFileInfo(const char* file, struct stat* st) {
     return true;
 }
 
-}
+}  // namespace dsblock

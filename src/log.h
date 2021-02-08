@@ -4,7 +4,7 @@
  */
 
 #ifndef LOG_H
-#define	LOG_H
+#define LOG_H
 
 #include "utils.h"
 
@@ -26,7 +26,7 @@ public:
     virtual ~Logger() {
     }
 
-    virtual void operator()(int type, const char *format, ...) = 0;
+    virtual void operator()(int type, const char* format, ...) = 0;
 
 private:
     DISABLE_ASSIGN_AND_COPY(Logger);
@@ -36,6 +36,6 @@ extern Logger* logger_global;
 
 #define DoLog logger_global->operator()
 
-}
+}  // namespace dsblock
 
-#endif	/* LOG_H */
+#endif /* LOG_H */

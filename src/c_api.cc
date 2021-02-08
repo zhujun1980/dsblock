@@ -19,33 +19,34 @@ extern "C" {
 #endif
 
 int BloomFilterIsPresent(const char* bin_file, size_t bin_file_len,
-    const char *key, size_t key_len)
-{
-    int ret;
+                         const char* key, size_t key_len) {
+    // int ret;
     std::string bin(bin_file, bin_file_len);
     std::string k(key, key_len);
-    const dsblock::BloomFilter* filter = nullptr;
-    dsblock::FCache<dsblock::BloomFilter> caches;
+    // const dsblock::BloomFilter *filter = nullptr;
+    // dsblock::FCache<dsblock::BloomFilter> caches;
+    dsblock::FCacheMT<dsblock::BloomFilter> caches;
 
-    ret = caches.GetMappingObject(bin, &filter);
-    if(ret != 0 || !filter) {
+    auto mapping = caches.GetMappingObject(bin);
+    // ret = caches.GetMappingObject(bin, &filter);
+    if (!mapping) {
         return 0;
     }
-    return filter->IsPresent(k) ? 1 : 0;
+    // return filter->IsPresent(k) ? 1 : 0;
+    return mapping->object->IsPresent(k) ? 1 : 0;
 }
 
 int BloomFilterCreateBinaryFromText(const char* txt_file, size_t txt_file_len,
-    const char *bin_file, size_t bin_file_len,
-    int num_elements, unsigned int data_vers,
-    int hash_count, int bits_per_element)
-{
+                                    const char* bin_file, size_t bin_file_len,
+                                    int num_elements, unsigned int data_vers,
+                                    int hash_count, int bits_per_element) {
     int cnt = 0;
     std::string txt(txt_file, txt_file_len);
     std::string bin(bin_file, bin_file_len);
     dsblock::BloomFilter filter(hash_count, num_elements, bits_per_element, data_vers);
 
     std::ifstream fs(txt);
-    if(!fs.is_open()) {
+    if (!fs.is_open()) {
         return 0;
     }
 
@@ -54,18 +55,17 @@ int BloomFilterCreateBinaryFromText(const char* txt_file, size_t txt_file_len,
         filter.Add(line);
         cnt++;
     }
-    if(!filter.Save(bin)) {
+    if (!filter.Save(bin)) {
         return 0;
     }
     return cnt;
 }
 
-int BloomFilterGetStats(const char *bin_file, size_t bin_file_len,
-    int* bit_size, int* byte_size, int* hashs_cnt, unsigned int* data_vers)
-{
+int BloomFilterGetStats(const char* bin_file, size_t bin_file_len,
+                        int* bit_size, int* byte_size, int* hashs_cnt, unsigned int* data_vers) {
     std::string bin(bin_file, bin_file_len);
     std::unique_ptr<dsblock::BloomFilter> filter(dsblock::BloomFilter::Load(bin));
-    if(!filter.get()) {
+    if (!filter.get()) {
         return -1;
     }
 
@@ -80,8 +80,7 @@ int BloomFilterGetStats(const char *bin_file, size_t bin_file_len,
 }
 
 int TstCreateBinaryFromText(const char* txt_file, size_t txt_file_len,
-    const char *bin_file, size_t bin_file_len)
-{
+                            const char* bin_file, size_t bin_file_len) {
     std::string txt(txt_file, txt_file_len);
     std::string bin(bin_file, bin_file_len);
     std::unique_ptr<dsblock::TriSearchTries> tries(dsblock::TriSearchTries::Build(txt));
@@ -89,8 +88,7 @@ int TstCreateBinaryFromText(const char* txt_file, size_t txt_file_len,
 }
 
 int TstIsPresent(const char* bin_file, size_t bin_file_len,
-    const char *key, size_t key_len)
-{
+                 const char* key, size_t key_len) {
     int ret;
     std::string bin(bin_file, bin_file_len);
     std::string k(key, key_len);
@@ -98,16 +96,15 @@ int TstIsPresent(const char* bin_file, size_t bin_file_len,
     dsblock::FCache<dsblock::TriSearchTries> caches;
 
     ret = caches.GetMappingObject(bin, &tst);
-    if(ret != 0 || !tst) {
+    if (ret != 0 || !tst) {
         return 0;
     }
     return tst->IsPresent(k) ? 1 : 0;
 }
 
 int TstPrefixSearch(const char* bin_file, size_t bin_file_len,
-    const char* pf, size_t pf_len, int with_prefix,
-    char* out_buffer, size_t* len, int* total)
-{
+                    const char* pf, size_t pf_len, int with_prefix,
+                    char* out_buffer, size_t* len, int* total) {
     int ret;
     std::string bin(bin_file, bin_file_len);
     std::string prefix(pf, pf_len);
@@ -118,17 +115,17 @@ int TstPrefixSearch(const char* bin_file, size_t bin_file_len,
 
     int cnt = 0;
     size_t wrote = 0L;
-    char *curr = out_buffer;
+    char* curr = out_buffer;
 
     ret = caches.GetMappingObject(bin, &tst);
-    if(ret != 0 || !tst) {
+    if (ret != 0 || !tst) {
         return 0;
     }
 
     tst->PrefixSearch(prefix, words, wp);
 
-    for(auto& word : words) {
-        if((wrote + word.size() + 1) > *len) {
+    for (auto& word : words) {
+        if ((wrote + word.size() + 1) > *len) {
             continue;
         }
         std::copy(word.begin(), word.end(), curr);
@@ -145,9 +142,8 @@ int TstPrefixSearch(const char* bin_file, size_t bin_file_len,
 }
 
 int TstNearNeighborSearch(const char* bin_file, size_t bin_file_len,
-    const char* word, size_t word_len, int distance,
-    char* out_buffer, size_t* len, int* total)
-{
+                          const char* word, size_t word_len, int distance,
+                          char* out_buffer, size_t* len, int* total) {
     int ret;
     std::string bin(bin_file, bin_file_len);
     std::string skey(word, word_len);
@@ -157,17 +153,17 @@ int TstNearNeighborSearch(const char* bin_file, size_t bin_file_len,
 
     int cnt = 0;
     size_t wrote = 0L;
-    char *curr = out_buffer;
+    char* curr = out_buffer;
 
     ret = caches.GetMappingObject(bin, &tst);
-    if(ret != 0 || !tst) {
+    if (ret != 0 || !tst) {
         return 0;
     }
 
     tst->NearNeighborSearch(skey, distance, neighbors);
 
-    for(auto& word : neighbors) {
-        if((wrote + word.size() + 1) > *len) {
+    for (auto& word : neighbors) {
+        if ((wrote + word.size() + 1) > *len) {
             continue;
         }
         std::copy(word.begin(), word.end(), curr);

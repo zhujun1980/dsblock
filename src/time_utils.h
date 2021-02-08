@@ -4,16 +4,16 @@
  */
 
 #ifndef TIME_UTILS_H
-#define	TIME_UTILS_H
+#define TIME_UTILS_H
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <time.h>
 #include <sys/time.h>
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 }
 #endif
 
@@ -23,5 +23,4 @@ double Now();
 
 }
 
-#endif	/* TIME_UTILS_H */
-
+#endif /* TIME_UTILS_H */

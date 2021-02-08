@@ -53,6 +53,6 @@ private:
     DataLoc data_loc;
 };
 
-}
+}  // namespace dsblock
 
 #endif /* defined(__BloomFilter__bit_set__) */

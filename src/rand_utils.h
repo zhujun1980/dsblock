@@ -14,6 +14,6 @@ namespace dsblock {
 uint32_t RandUint32();
 uint64_t RandUint64();
 
-}
+}  // namespace dsblock
 
 #endif /* defined(__SimpleIndex__rand_utils__) */

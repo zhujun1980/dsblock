@@ -1,0 +1,23 @@
+BasedOnStyle: Google
+UseTab: Never
+IndentWidth: 4
+TabWidth: 4
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: false
+ColumnLimit: 0
+AccessModifierOffset: -4
+NamespaceIndentation: None
+BreakBeforeBraces: Custom
+Standard: c++14
+SortIncludes: false
+IncludeBlocks: Preserve
+BraceWrapping:
+  AfterEnum: false
+  AfterStruct: false
+  AfterCaseLabel: true
+  AfterFunction: false
+  AfterNamespace: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: true
+  BeforeElse: true

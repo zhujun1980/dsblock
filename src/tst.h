@@ -13,11 +13,11 @@
 namespace dsblock {
 
 struct TstNode {
-    u_int32_t   value;
-    int         lokid;
-    int         eqkid;
-    int         hikid;
-    bool        end;
+    u_int32_t value;
+    int lokid;
+    int eqkid;
+    int hikid;
+    bool end;
 };
 
 class TriSearchTries {
@@ -29,7 +29,7 @@ public:
 public:
     TriSearchTries(size_t count);
 
-    TriSearchTries(TstNode *data, size_t count, size_t frees);
+    TriSearchTries(TstNode* data, size_t count, size_t frees);
 
     ~TriSearchTries();
 
@@ -38,13 +38,13 @@ public:
     bool IsPresent(const std::string& word) const;
 
     void PrefixSearch(const std::string& prefix,
-        std::vector<std::string>& words, bool with_prefix = false) const;
+                      std::vector<std::string>& words, bool with_prefix = false) const;
 
     void NearNeighborSearch(const std::string& word,
-        int distance, std::vector<std::string>& neighbors) const;
+                            int distance, std::vector<std::string>& neighbors) const;
 
     void Traverse(std::vector<u_int32_t>& prefix,
-        size_t idx, TstNodeVisitor vistor) const;
+                  size_t idx, TstNodeVisitor vistor) const;
 
     size_t Save(const std::string& binfile);
 
@@ -60,9 +60,9 @@ private:
     size_t GetNode(const std::string& word) const;
 
     void NearNeighborSearch(const std::string& word,
-        int distance, int word_idx, int tree_idx,
-        std::vector<u_int32_t>& result,
-        std::vector<std::string>& neighbors) const;
+                            int distance, int word_idx, int tree_idx,
+                            std::vector<u_int32_t>& result,
+                            std::vector<std::string>& neighbors) const;
 
 public:
     static TriSearchTries* Load(void* addr, size_t size);
@@ -79,4 +79,4 @@ private:
     DataLoc data_loc_;
 };
 
-}
+}  // namespace dsblock
