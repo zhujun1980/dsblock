@@ -10,6 +10,13 @@
 extern "C" {
 #endif
 
+struct CTstMatchedWords {
+    struct CTstMatchedWords *next;
+    char tag[0];
+};
+
+typedef struct CTstMatchedWords CTstMatchedWords;
+
 int BloomFilterIsPresent(const char* bin_file, size_t bin_file_len,
                          const char* key, size_t key_len);
 
@@ -26,6 +33,13 @@ int TstCreateBinaryFromText(const char* txt_file, size_t txt_file_len,
 
 int TstIsPresent(const char* bin_file, size_t bin_file_len,
                  const char* key, size_t key_len);
+
+CTstMatchedWords* TstMatch(const char* bin_file, size_t bin_file_len,
+                           const char* text, size_t text_len);
+
+const char* GetMatchedWords(CTstMatchedWords* words);
+
+void FreeTstMatchedWords(CTstMatchedWords* words);
 
 int TstPrefixSearch(const char* bin_file, size_t bin_file_len,
                     const char* prefix, size_t prefix_len, int with_prefix,

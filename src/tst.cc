@@ -119,6 +119,56 @@ size_t TriSearchTries::GetNode(const std::string& word) const {
     return count_;
 }
 
+int TriSearchTries::Match(const std::string& text, std::vector<std::string>& words) const {
+    u_int32_t value;
+    int i = 0;
+    int j = 0;
+    int ret;
+    char temp[4];
+    int cnt = 0;
+
+    value = u8_nextchar(text.c_str(), &i);
+    while(value != 0) {
+        std::vector<u_int32_t> buf;
+        std::string word = "";
+        size_t idx = 0L;
+
+        j = i;
+        while (idx < free_) {
+            if (data_[idx].value == value) {
+                buf.push_back(value);
+                if(data_[idx].end) {
+                    break;
+                }
+                value = u8_nextchar(text.c_str(), &j);
+                if (value == 0) {
+                    break;
+                }
+                idx = data_[idx].eqkid;
+            }
+            else if (data_[idx].value > value) {
+                idx = data_[idx].lokid;
+            }
+            else {
+                idx = data_[idx].hikid;
+            }
+        }
+
+        if(idx != count_ && data_[idx].end) {
+            for (auto v : buf) {
+                ret = u8_wc_toutf8(temp, v);
+                for (int i = 0; i < ret; ++i)
+                    word += temp[i];
+            }
+            words.push_back(word);
+            cnt++;
+        }
+
+        value = u8_nextchar(text.c_str(), &i);
+    }
+    return cnt;
+}
+
 bool TriSearchTries::IsPresent(const std::string& word) const {
     size_t idx = GetNode(word);
     if (idx != count_ && data_[idx].end)
@@ -322,13 +372,15 @@ TriSearchTries* TriSearchTries::Build(const std::string& txtfile) {
     }
     std::sort(words.begin(), words.end());
 
-    total += u8_strlen(words[0].c_str());
-    for (size_t i = 1; i < words.size(); ++i) {
-        int len = u8_prefixlen(words[i - 1].c_str(), words[i - 1].size(),
-                               words[i].c_str(), words[i].size());
-        int inc = u8_strlen(words[i].c_str()) - len;
-        assert(inc >= 0);
-        total += inc;
+    if (words.size()) {
+        total += u8_strlen(words[0].c_str());
+        for (size_t i = 1; i < words.size(); ++i) {
+            int len = u8_prefixlen(words[i - 1].c_str(), words[i - 1].size(),
+                                words[i].c_str(), words[i].size());
+            int inc = u8_strlen(words[i].c_str()) - len;
+            assert(inc >= 0);
+            total += inc;
+        }
     }
 
     tries = new TriSearchTries(total);

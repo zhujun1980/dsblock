@@ -102,6 +102,56 @@ int TstIsPresent(const char* bin_file, size_t bin_file_len,
     return tst->IsPresent(k) ? 1 : 0;
 }
 
+CTstMatchedWords* TstMatch(const char* bin_file, size_t bin_file_len,
+                           const char* text, size_t text_len) {
+    int ret;
+    std::string bin(bin_file, bin_file_len);
+    std::string txt(text, text_len);
+    const dsblock::TriSearchTries* tst = nullptr;
+    dsblock::FCache<dsblock::TriSearchTries> caches;
+    std::vector<std::string> words;
+    int memsize;
+    CTstMatchedWords *buf, *ptr;
+
+    ret = caches.GetMappingObject(bin, &tst);
+    if (ret != 0 || !tst) {
+        return nullptr;
+    }
+
+    ret = tst->Match(txt, words);
+    if (ret == 0) {
+        return nullptr;
+    }
+
+    memsize = 0;
+    for(auto word : words) {
+        memsize += sizeof(CTstMatchedWords) + word.size() + 1;
+    }
+    memsize += sizeof(CTstMatchedWords);
+    buf = (CTstMatchedWords*)malloc(memsize);
+    if(!buf) {
+        return nullptr;
+    }
+    memset(buf, '\0', memsize);
+    ptr = buf;
+    for(auto word : words) {
+        memcpy(ptr->tag, word.data(), word.size());
+        char * cur = (char*)ptr;
+        ptr->next = (CTstMatchedWords*)(cur + sizeof(CTstMatchedWords) + word.size() + 1);
+        ptr = ptr->next;
+    }
+    ptr->next = nullptr;
+    return buf;
+}
+
+const char* GetMatchedWords(CTstMatchedWords* words) {
+    return words->tag;
+}
+
+void FreeTstMatchedWords(CTstMatchedWords* words) {
+    free(words);
+}
+
 int TstPrefixSearch(const char* bin_file, size_t bin_file_len,
                     const char* pf, size_t pf_len, int with_prefix,
                     char* out_buffer, size_t* len, int* total) {

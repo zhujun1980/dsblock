@@ -37,6 +37,8 @@ public:
 
     bool IsPresent(const std::string& word) const;
 
+    int Match(const std::string& text, std::vector<std::string>& words) const;
+
     void PrefixSearch(const std::string& prefix,
                       std::vector<std::string>& words, bool with_prefix = false) const;
 
