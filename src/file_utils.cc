@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <string.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <time.h>
@@ -21,6 +22,7 @@ extern "C" {
 
 #include "utils.h"
 #include "file_utils.h"
+#include "log.h"
 
 namespace dsblock {
 
@@ -77,6 +79,7 @@ bool GetFileSize(const char* file, size_t& size) {
 
     NO_INTR(ret = stat(file, &st));
     if (ret < 0) {
+        DoLog(Logger::WARNING, "get file size failed %s, error: %s", file, strerror(errno));
         return false;
     }
     else {
@@ -95,6 +98,7 @@ bool GetFileInfo(const char* file, struct stat* st) {
 
     NO_INTR(ret = stat(file, st));
     if (ret < 0) {
+        DoLog(Logger::WARNING, "get file info failed %s, error: %s", file, strerror(errno));
         return false;
     }
     return true;
