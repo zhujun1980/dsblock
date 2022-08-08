@@ -32,11 +32,10 @@ TEST(Tst, Insert) {
 
 const dsblock::TriSearchTries* GetTst() {
     const char *bin = "testdict.tst";
-    const dsblock::TriSearchTries* tst = nullptr;
-    dsblock::FCache<dsblock::TriSearchTries> caches;
-    auto ret = caches.GetMappingObject(bin, &tst);
-    assert(ret == 0);
-    return tst;
+    dsblock::FCacheMT<dsblock::TriSearchTries> caches;
+    auto ret = caches.GetMappingObject(bin);
+    assert(ret != nullptr);
+    return ret->object;
 }
 
 TEST(Tst, Build) {
@@ -59,15 +58,13 @@ TEST(Tst, Build) {
     auto sz = tries->Save(bin);
     EXPECT_GE(sz, 0);
 
-    const dsblock::TriSearchTries* tst = nullptr;
-    dsblock::FCache<dsblock::TriSearchTries> caches;
-    auto ret = caches.GetMappingObject(bin, &tst);
-    EXPECT_NE(tst, nullptr);
-    EXPECT_EQ(ret, 0);
+    dsblock::FCacheMT<dsblock::TriSearchTries> caches;
+    auto ret = caches.GetMappingObject(bin);
+    EXPECT_NE(ret, nullptr);
 }
 
 TEST(Tst, Match) {
-    const dsblock::TriSearchTries* tst = GetTst();
+    auto tst = GetTst();
     EXPECT_NE(tst, nullptr);
     std::vector<std::string> words;
 
@@ -130,7 +127,7 @@ TEST(Tst, Match) {
 }
 
 TEST(Tst, PrefixSearch) {
-    const dsblock::TriSearchTries* tst = GetTst();
+    auto tst = GetTst();
     EXPECT_NE(tst, nullptr);
 
     bool with_prefix = true;

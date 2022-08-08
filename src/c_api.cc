@@ -92,14 +92,13 @@ int TstIsPresent(const char* bin_file, size_t bin_file_len,
     int ret;
     std::string bin(bin_file, bin_file_len);
     std::string k(key, key_len);
-    const dsblock::TriSearchTries* tst = nullptr;
-    dsblock::FCache<dsblock::TriSearchTries> caches;
+    dsblock::FCacheMT<dsblock::TriSearchTries> caches;
 
-    ret = caches.GetMappingObject(bin, &tst);
-    if (ret != 0 || !tst) {
+    auto mapping = caches.GetMappingObject(bin);
+    if (!mapping) {
         return 0;
     }
-    return tst->IsPresent(k) ? 1 : 0;
+    return mapping->object->IsPresent(k) ? 1 : 0;
 }
 
 CTstMatchedWords* TstMatch(const char* bin_file, size_t bin_file_len,
@@ -107,18 +106,17 @@ CTstMatchedWords* TstMatch(const char* bin_file, size_t bin_file_len,
     int ret;
     std::string bin(bin_file, bin_file_len);
     std::string txt(text, text_len);
-    const dsblock::TriSearchTries* tst = nullptr;
-    dsblock::FCache<dsblock::TriSearchTries> caches;
     std::vector<std::string> words;
     int memsize;
     CTstMatchedWords *buf, *ptr;
+    dsblock::FCacheMT<dsblock::TriSearchTries> caches;
 
-    ret = caches.GetMappingObject(bin, &tst);
-    if (ret != 0 || !tst) {
-        return nullptr;
+    auto mapping = caches.GetMappingObject(bin);
+    if (!mapping) {
+        return 0;
     }
 
-    ret = tst->Match(txt, words);
+    ret = mapping->object->Match(txt, words);
     if (ret == 0) {
         return nullptr;
     }
@@ -158,21 +156,20 @@ int TstPrefixSearch(const char* bin_file, size_t bin_file_len,
     int ret;
     std::string bin(bin_file, bin_file_len);
     std::string prefix(pf, pf_len);
-    const dsblock::TriSearchTries* tst = nullptr;
-    dsblock::FCache<dsblock::TriSearchTries> caches;
     std::vector<std::string> words;
     bool wp = (with_prefix != 0) ? true : false;
 
     int cnt = 0;
     size_t wrote = 0L;
     char* curr = out_buffer;
+    dsblock::FCacheMT<dsblock::TriSearchTries> caches;
 
-    ret = caches.GetMappingObject(bin, &tst);
-    if (ret != 0 || !tst) {
+    auto mapping = caches.GetMappingObject(bin);
+    if (!mapping) {
         return 0;
     }
 
-    tst->PrefixSearch(prefix, words, wp);
+    mapping->object->PrefixSearch(prefix, words, wp);
 
     for (auto& word : words) {
         if ((wrote + word.size() + 1) > *len) {
@@ -197,20 +194,19 @@ int TstNearNeighborSearch(const char* bin_file, size_t bin_file_len,
     int ret;
     std::string bin(bin_file, bin_file_len);
     std::string skey(word, word_len);
-    const dsblock::TriSearchTries* tst = nullptr;
-    dsblock::FCache<dsblock::TriSearchTries> caches;
     std::vector<std::string> neighbors;
 
     int cnt = 0;
     size_t wrote = 0L;
     char* curr = out_buffer;
+    dsblock::FCacheMT<dsblock::TriSearchTries> caches;
 
-    ret = caches.GetMappingObject(bin, &tst);
-    if (ret != 0 || !tst) {
+    auto mapping = caches.GetMappingObject(bin);
+    if (!mapping) {
         return 0;
     }
 
-    tst->NearNeighborSearch(skey, distance, neighbors);
+    mapping->object->NearNeighborSearch(skey, distance, neighbors);
 
     for (auto& word : neighbors) {
         if ((wrote + word.size() + 1) > *len) {
